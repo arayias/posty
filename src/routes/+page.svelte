@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Welcome to Stocky</h1>
+
+<p>
+	Stocky is a simple stock tracking app that allows you to track the stocks you are interested in.
+</p>
