@@ -1,5 +1,3 @@
-<h1>Welcome to Stocky</h1>
+<h1>Welcome to Posty</h1>
 
-<p>
-	Stocky is a simple stock tracking app that allows you to track the stocks you are interested in.
-</p>
+<p>Posty is a simple blog application that allows you to create, read, update, and delete posts.</p>
