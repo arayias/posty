@@ -1,15 +1,17 @@
 // create a post in mongo
 import { PostModel } from '$db/models/PostModel';
 
-export const createPost = async (title: string, content: string) => {
+export const createPost = async (title: string, content: string, authedUserId: string) => {
+	console.log(authedUserId);
 	const post = new PostModel({
 		title,
 		content,
-		date: new Date()
+		author: authedUserId
 	});
 	try {
 		await post.save();
-	} catch {
+	} catch (e) {
+		console.error(e);
 		return false;
 	}
 };
@@ -23,6 +25,6 @@ export const deletePost = async (id: string) => {
 };
 
 export const getPosts = async () => {
-	let posts = await PostModel.find({});
+	let posts = await PostModel.find({}).populate('author', { username: 1, _id: 1 });
 	return posts;
 };

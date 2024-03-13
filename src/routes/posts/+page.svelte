@@ -74,6 +74,7 @@
 		>
 			<h2>{post.title}</h2>
 			<p>{post.content}</p>
+			<p>By {post.author.username}</p>
 			<form
 				method="POST"
 				use:enhance={() => {

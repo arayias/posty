@@ -1,5 +1,16 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { user } from '../../stores';
+	export let form;
+	export let data;
+
+	// @ts-ignore
+	$: clearUser = data?.clearUser;
+	$: {
+		if (clearUser) {
+			user.set(undefined);
+		}
+	}
 </script>
 
 <form
@@ -18,4 +29,7 @@
 		class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
 		type="submit">Login</button
 	>
+	{#if form?.error}
+		<p class="text-red-500">{form.message}</p>
+	{/if}
 </form>
