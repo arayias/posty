@@ -15,7 +15,15 @@ export async function handle({ event, resolve }) {
 
 		const claims = authToken ? jwt.verify(authToken, SECRET_INGREDIENT) : null;
 
-		if (!claims) event.locals.authedUser = null;
+		if (!claims) {
+			event.locals.authedUser = null;
+			event.cookies.set('authToken', '', {
+				path: '/',
+				maxAge: 0,
+				httpOnly: true
+			});
+		}
+		// reset the cookies
 
 		if (authToken && claims) {
 			const fullUser = await getUserByUsername(claims.userNoPass.username);
