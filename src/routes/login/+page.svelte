@@ -1,16 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { user } from '../../stores';
 	export let form;
-	export let data;
-
-	// @ts-ignore
-	$: clearUser = data?.clearUser;
-	$: {
-		if (clearUser) {
-			user.set(undefined);
-		}
-	}
 </script>
 
 <form

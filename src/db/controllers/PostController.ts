@@ -24,7 +24,17 @@ export const deletePost = async (id: string) => {
 	}
 };
 
+export const getPostById = async (id: string) => {
+	let post = await PostModel.findById(id).populate('author', { username: 1, _id: 1 });
+	return post;
+};
+
 export const getPosts = async () => {
 	let posts = await PostModel.find({}).populate('author', { username: 1, _id: 1 });
+	return posts;
+};
+
+export const getPostsByUserId = async (id: string) => {
+	let posts = await PostModel.find({ author: id }).populate('author', { username: 1, _id: 1 });
 	return posts;
 };

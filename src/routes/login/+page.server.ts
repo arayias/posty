@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 export async function load({ cookies }) {
 	const authToken = cookies.get('authToken');
 	if (authToken) {
-		return redirect(303, '/posts');
+		return redirect(303, '/');
 	}
 }
 

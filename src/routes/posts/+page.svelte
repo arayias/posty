@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Post from '$components/Post.svelte';
 	import type { ObjectId } from 'mongodb';
 
 	export let data;
 	export let errorMessage = '';
 	let isModalOpen = false;
 	let attached = false;
+	$: user = data.user ?? null;
 
 	const closeOnOutsideClick = (event: MouseEvent) => {
 		const target = event?.target as HTMLElement;
@@ -32,16 +34,19 @@
 		}
 	}
 
-	const optimisticDelete = (postId: ObjectId) => {
-		data.posts = data.posts.filter((post) => post._id.toString() !== postId.toString());
-	};
+	// const optimisticDelete = (postId: ObjectId) => {
+	// 	data.posts = data.posts.filter((post) => post._id.toString() !== postId.toString());
+	// };
 </script>
 
 <!-- button to open a form modal -->
-<button
-	class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
-	on:click={() => (isModalOpen = true)}>Create Post</button
->
+
+{#if user}
+	<button
+		class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
+		on:click={() => (isModalOpen = true)}>Create Post</button
+	>
+{/if}
 
 <!-- modal form -->
 {#if isModalOpen}
@@ -67,31 +72,8 @@
 	</div>
 {/if}
 
-<div class="flex flex-col gap-4 items-center">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 	{#each data.posts as post}
-		<div
-			class="bg-slate-300 p-4 rounded-lg shadow-md my-4 flex flex-col gap-4 items-center w-[50%]"
-		>
-			<h2>{post.title}</h2>
-			<p>{post.content}</p>
-			<p>By {post.author.username}</p>
-			<form
-				method="POST"
-				use:enhance={() => {
-					optimisticDelete(post._id);
-					return async ({ update }) => {
-						update({ reset: false });
-					};
-				}}
-				action="?/delete"
-				class="flex gap-4"
-			>
-				<input type="hidden" name="id" value={post._id} />
-				<button
-					class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
-					type="submit">Delete</button
-				>
-			</form>
-		</div>
+		<Post {post} {user} />
 	{/each}
 </div>

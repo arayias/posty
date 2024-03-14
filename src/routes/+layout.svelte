@@ -9,10 +9,15 @@
 		<a href="/">Home</a>
 		<a class="" href="/posts">Posts</a>
 		{#if user}
-			<a data-sveltekit-preload-data="false" data-sveltekit-reload href="/logout">Logout</a>
+			<div class="ml-auto flex items-center gap-4">
+				<a href="/user/{user._id}">Profile</a>
+				<a data-sveltekit-reload href="/logout">Logout</a>
+			</div>
 		{:else}
-			<a href="/login">Login</a>
-			<a href="/register">Register</a>
+			<div class="ml-auto flex items-center gap-4">
+				<a href="/login">Login</a>
+				<a href="/register">Register</a>
+			</div>
 		{/if}
 	</nav>
 {/key}

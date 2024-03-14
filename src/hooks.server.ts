@@ -27,7 +27,6 @@ export async function handle({ event, resolve }) {
 
 		if (authToken && claims) {
 			const fullUser = await getUserByUsername(claims.userNoPass.username);
-			console.log('hook run', fullUser);
 			let userNoPass = JSON.parse(JSON.stringify(fullUser));
 			delete userNoPass.password;
 			event.locals.authedUser = userNoPass;

@@ -1,11 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 
-export function load({ cookies }) {
+export function load({ cookies, url }) {
 	cookies.set('authToken', '', {
 		path: '/',
 		maxAge: 0,
 		httpOnly: true
 	});
-	// redirect to home but also invalidate the cache
-	redirect(303, '/posts');
+	// redirect to page they were on
+	console.log(url);
+	redirect(303, url.origin || '/');
 }

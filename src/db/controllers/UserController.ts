@@ -5,6 +5,11 @@ export const getUserByUsername = async (username: string) => {
 	return user;
 };
 
+export const getUserById = async (id: string) => {
+	const user = await UserModel.findById(id);
+	return user;
+};
+
 export const createUser = async (username: string, password: string) => {
 	const user = new UserModel({
 		username,
