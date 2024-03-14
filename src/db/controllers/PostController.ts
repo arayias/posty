@@ -1,5 +1,7 @@
 // create a post in mongo
 import { PostModel } from '$db/models/PostModel';
+import { deleteUserLike } from '$db/controllers/UserController';
+import mongoose from '$db/mongo';
 
 export const createPost = async (title: string, content: string, authedUserId: string) => {
 	console.log(authedUserId);
@@ -17,9 +19,30 @@ export const createPost = async (title: string, content: string, authedUserId: s
 };
 
 export const deletePost = async (id: string) => {
+	// first get post by id and check if it exists
+	console.log(id);
+	let session = await mongoose.startSession();
+	session.startTransaction();
 	try {
-		await PostModel.deleteOne({ _id: id });
+		let post = await PostModel.findById(id);
+		if (!post) {
+			console.log('no post found');
+			await session.abortTransaction();
+			session.endSession();
+			return false;
+		}
+		let likes = post.likes;
+		for (let i = 0; i < likes.length; i++) {
+			await deleteUserLike(likes[i].toString(), id);
+		}
+		await PostModel.findByIdAndDelete(id);
+		await session.commitTransaction();
+		session.endSession();
+		return true;
 	} catch {
+		console.log('error');
+		await session.abortTransaction();
+		session.endSession();
 		return false;
 	}
 };

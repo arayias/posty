@@ -50,7 +50,10 @@
 
 <!-- modal form -->
 {#if isModalOpen}
-	<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+	<div
+		id="modal"
+		class="fixed z-10 inset-0 bg-black bg-opacity-20 flex justify-center items-center"
+	>
 		<form
 			use:enhance={() => {
 				return async ({ update }) => {

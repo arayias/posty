@@ -7,7 +7,6 @@ export async function load({ locals, params }) {
 	let userProfile = await getUserById(userId);
 
 	if (!userProfile) {
-		// action fail
 		throw new Error('User not found');
 	}
 
