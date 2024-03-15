@@ -3,6 +3,8 @@
 
 	export let user;
 	export let showAuthor = true;
+	export let showComments = false;
+	export let showDelete = true;
 	export let post: {
 		title: string;
 		date: Date;
@@ -10,6 +12,10 @@
 		_id: string;
 		likeCount: number;
 		likes: string[];
+		comments: {
+			content: string;
+			date: Date;
+		}[];
 	};
 	const isPostLiked = (post: { likes: string[] }) => {
 		return post.likes.includes(user?._id);
@@ -20,7 +26,7 @@
 	class="p-4 bg-slate-300 rounded-lg shadow-lg my-4 relative hover:shadow-2xl transition-shadow duration-300 ease-in-out"
 >
 	<!--  delete button -->
-	{#if user?._id === post.author._id}
+	{#if user?._id === post.author._id && showDelete}
 		<div class="absolute top-0.5 right-0.5">
 			<form
 				method="POST"
@@ -44,7 +50,9 @@
 	{/if}
 	<div class="flex flex-row">
 		<div>
-			<h3 class="text-xl font-bold">{post.title}</h3>
+			<h3 class="text-xl font-bold">
+				<a href={`/post/${post._id}`}>{post.title}</a>
+			</h3>
 		</div>
 		<div class="ml-auto flex items-end flex-col">
 			<p class="text-sm text-gray-500">
@@ -77,7 +85,45 @@
 			</form>
 		</div>
 		<div class="bg-slate-100 m-0.5 p-1.5 rounded-md ml-auto">
-			<a href={`/posts/${post._id}`}>Comments</a>
+			<a href={`/post/${post._id}`}>Comments</a>
 		</div>
 	</div>
+	{#if showComments}
+		<div class="border-t-2 border-slate-100 my-4"></div>
+		<div>
+			{#if post.comments.length > 0}
+				{#each post.comments as comment}
+					<div class="p-2 bg-slate-100 rounded-md my-2">
+						<p>{comment.content}</p>
+						<p class="text-sm text-gray-500">
+							{new Date(comment.date).toLocaleDateString()}
+						</p>
+					</div>
+				{/each}
+			{:else}
+				<p>No comments yet</p>
+			{/if}
+		</div>
+		<div>
+			<form
+				method="POST"
+				action={`/post/${post._id}?/comment`}
+				use:enhance
+				on:submit|preventDefault
+			>
+				<input type="hidden" name="id" value={post._id} />
+				<textarea
+					name="comment"
+					class="w-full p-2 rounded-md border-2 border-slate-100"
+					placeholder="Add a comment"
+				></textarea>
+				<button
+					class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
+					type="submit"
+				>
+					Comment
+				</button>
+			</form>
+		</div>
+	{/if}
 </div>

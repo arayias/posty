@@ -43,7 +43,8 @@ export const actions = {
 			};
 		}
 
-		let res = await deletePost(id);
+		console.log(`deleting post ${id}`);
+		let res = await deletePost(id, authedUser._id);
 		return {
 			status: res
 		};

@@ -9,9 +9,12 @@ declare global {
 			code: number;
 			message: string;
 		}
-		// interface Locals {
-		// 	authedUser: UserMod
-		// }
+		interface Locals {
+			authedUser: {
+				_id?: string;
+				username?: string;
+			} | null;
+		}
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}

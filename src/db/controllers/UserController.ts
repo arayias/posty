@@ -1,6 +1,7 @@
 import { PostModel } from '$db/models/PostModel';
 import { UserModel } from '$db/models/UserModel';
 import mongoose from '$db/mongo';
+import { get } from 'mongoose';
 
 export const getUserByUsername = async (username: string) => {
 	const user = await UserModel.findOne({ username });
@@ -15,6 +16,7 @@ export const getUserById = async (id: string) => {
 export const deleteUserLike = async (userId: string, postId: string) => {
 	const user = await UserModel.findById(userId);
 	const post = await PostModel.findById(postId);
+	console.log(`deleteUserLike(${userId}, ${postId}) returned ${user} and ${post}`);
 	if (!user || !post) {
 		return false;
 	}
@@ -25,6 +27,11 @@ export const deleteUserLike = async (userId: string, postId: string) => {
 	}
 	user.likes.splice(postIndex, 1);
 	post.likeCount--;
+	if (userIndex === -1) {
+		return false;
+	}
+	post.likes.splice(userIndex, 1);
+	await user.save();
 };
 
 export const createUser = async (username: string, password: string) => {
@@ -43,6 +50,31 @@ export const createUser = async (username: string, password: string) => {
 	} catch {
 		return false;
 	}
+};
+
+export const addCommentToUser = async (userId: string, commentId: string) => {
+	const user = await getUserById(userId);
+	if (!user) {
+		return false;
+	}
+	user.comments.push(commentId);
+	await user.save();
+	return true;
+};
+
+export const deleteUserComment = async (userId: string, commentId: string) => {
+	const user = await getUserById(userId);
+	console.log(`getUserById(${userId}) returned ${user}`);
+	if (!user) {
+		return false;
+	}
+	const index = user.comments.indexOf(commentId);
+	if (index === -1) {
+		return false;
+	}
+	user.comments.splice(index, 1);
+	await user.save();
+	return true;
 };
 
 export const toggleLike = async (userId: string, postId: string) => {
