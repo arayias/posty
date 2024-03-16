@@ -1,7 +1,6 @@
 import { PostModel } from '$db/models/PostModel';
 import { UserModel } from '$db/models/UserModel';
 import mongoose from '$db/mongo';
-import { get } from 'mongoose';
 
 export const getUserByUsername = async (username: string) => {
 	const user = await UserModel.findOne({ username });

@@ -20,6 +20,13 @@ export const actions = {
 
 		const user = await getUserByUsername(username);
 
+		if (!user) {
+			return {
+				message: 'Invalid username or password',
+				error: true
+			};
+		}
+
 		const isValid = await bcrypt.compare(password, user?.password || '');
 		let userNoPass = JSON.parse(JSON.stringify(user));
 		delete userNoPass.password;
