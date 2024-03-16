@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import type { List } from 'postcss/lib/list';
+import type { string } from 'zod';
 
 // for information about these interfaces
 declare global {
@@ -20,6 +21,13 @@ declare global {
 		// interface Platform {}
 	}
 }
+
+export type FormErrors = {
+	formErrors: [string];
+	fieldErrors: {
+		[key: string]: string;
+	};
+};
 
 type DBResponse<T> = {
 	error: boolean;

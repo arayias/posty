@@ -2,6 +2,11 @@ import { toggleLike } from '$db/controllers/UserController';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { getPostById } from '$db/controllers/PostController.js';
 import { createComment } from '$db/controllers/CommentController.js';
+import { z } from 'zod';
+
+const commentSchema = z.object({
+	content: z.string().min(1).max(255)
+});
 
 export const load = async ({ params, locals }: RequestEvent) => {
 	const postId = params.slug ?? '';
@@ -43,6 +48,20 @@ export const actions = {
 		const data = await request.formData();
 		const postId = data.get('id')?.toString() || '';
 		const content = data.get('comment')?.toString() || '';
+
+		try {
+			commentSchema.parse({ content });
+		} catch (e) {
+			if (e instanceof z.ZodError) {
+				let errors = e.flatten();
+				console.error(errors);
+				return {
+					status: 400,
+					errors
+				};
+			}
+		}
+
 		if (!content || !postId) {
 			return {
 				status: 400

@@ -1,12 +1,16 @@
 <script>
 	import { enhance } from '$app/forms';
 	export let form;
+
+	let loading = false;
 </script>
 
 <form
 	use:enhance={() => {
+		loading = true;
 		return async ({ update }) => {
-			update({ reset: false });
+			loading = false;
+			await update({ reset: false });
 		};
 	}}
 	method="POST"
@@ -16,7 +20,9 @@
 	<input class="p-1 rounded-sm" type="text" placeholder="Username" name="username" />
 	<input class="p-1 rounded-sm" type="password" placeholder="Password" name="password" />
 	<button
-		class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
+		class="bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out
+		{loading ? 'cursor-not-allowed' : ''}"
+		aria-busy={loading}
 		type="submit">Login</button
 	>
 	{#if form?.error}
