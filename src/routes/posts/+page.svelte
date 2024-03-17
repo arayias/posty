@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import InfiniteScroll from '$components/InfiniteScroll.svelte';
 	import Post from '$components/Post.svelte';
-	import type { ObjectId } from 'mongodb';
+	import posts from '../../stores/posts';
 
 	export let data;
 	export let errorMessage = '';
@@ -75,8 +76,10 @@
 	</div>
 {/if}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 	{#each data.posts as post}
 		<Post {post} {user} />
 	{/each}
-</div>
+</div> -->
+
+<InfiniteScroll {...$posts} {user} on:loadMore={posts.fetchMorePosts} />

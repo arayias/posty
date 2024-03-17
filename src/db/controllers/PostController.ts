@@ -62,8 +62,13 @@ export const getPostById = async (id: string) => {
 	return post;
 };
 
-export const getPosts = async () => {
-	let posts = await PostModel.find({}).populate('author', { username: 1, _id: 1 });
+export const getPosts = async (numberOfPosts: number, page: number) => {
+	// let posts = await PostModel.find({}).populate('author', { username: 1, _id: 1 });
+	let posts = await PostModel.find({})
+		.populate('author', { username: 1, _id: 1 })
+		.sort({ date: -1 })
+		.limit(numberOfPosts)
+		.skip((page - 1) * numberOfPosts);
 	return posts;
 };
 

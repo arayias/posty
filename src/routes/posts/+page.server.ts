@@ -2,7 +2,7 @@ import { createPost, getPosts, deletePost, getPostById } from '$db/controllers/P
 import type { RequestEvent, Action } from './$types.js';
 
 export const load = async ({ locals }: RequestEvent) => {
-	let posts = await getPosts();
+	let posts = await getPosts(10, 1);
 	posts = JSON.parse(JSON.stringify(posts));
 	return {
 		posts,
