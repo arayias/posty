@@ -1,13 +1,9 @@
-import { createPost, getPosts, deletePost, getPostById } from '$db/controllers/PostController';
+import { createPost } from '$db/controllers/PostController';
 import type { RequestEvent } from './$types.js';
+import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }: RequestEvent) => {
-	let posts = await getPosts();
-	posts = JSON.parse(JSON.stringify(posts));
-	return {
-		posts,
-		user: locals.authedUser
-	};
+	throw redirect(303, '/posts/1');
 };
 
 export const actions = {

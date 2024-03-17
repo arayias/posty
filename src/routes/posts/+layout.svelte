@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Post from '$components/Post.svelte';
-	import type { ObjectId } from 'mongodb';
+	import { currentPage } from '../../stores.js';
 
 	export let data;
 	export let errorMessage = '';
 	let isModalOpen = false;
 	let attached = false;
 	$: user = data.user ?? null;
+	$: postCount = data.count ?? 0;
+	$: pages = Math.ceil(postCount / 12);
+	$: page = $currentPage;
+	let page = 1;
 
 	const closeOnOutsideClick = (event: MouseEvent) => {
 		const target = event?.target as HTMLElement;
@@ -33,10 +36,6 @@
 			attached = false;
 		}
 	}
-
-	// const optimisticDelete = (postId: ObjectId) => {
-	// 	data.posts = data.posts.filter((post) => post._id.toString() !== postId.toString());
-	// };
 </script>
 
 <!-- button to open a form modal -->
@@ -61,7 +60,7 @@
 				};
 			}}
 			method="POST"
-			action="?/create"
+			action="/posts?/create"
 			class="flex flex-col gap-4 w-1/3 p-4 bg-slate-300 rounded-lg shadow-md items-center"
 		>
 			<input class="p-1 rounded-sm" type="text" placeholder="Title" name="title" />
@@ -75,8 +74,21 @@
 	</div>
 {/if}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-	{#each data.posts as post}
-		<Post {post} {user} />
-	{/each}
+<slot />
+
+<!-- pagination -->
+
+<div class="flex justify-center gap-4">
+	{#if pages > 1}
+		{#each Array.from({ length: pages }, (_, i) => i + 1) as pg}
+			<a
+				href={`/posts/${pg}`}
+				class="{pg == page
+					? `bg-slate-700`
+					: `bg-slate-500`} text-white p-2 rounded-md hover:bg-slate-600 transition-colors duration-300 ease-in-out"
+			>
+				{pg}
+			</a>
+		{/each}
+	{/if}
 </div>
