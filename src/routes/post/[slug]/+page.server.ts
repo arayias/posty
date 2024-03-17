@@ -1,6 +1,6 @@
 import { toggleLike } from '$db/controllers/UserController';
 import { error, type RequestEvent } from '@sveltejs/kit';
-import { getPostById } from '$db/controllers/PostController.js';
+import { deletePost, getPostById } from '$db/controllers/PostController.js';
 import { createComment } from '$db/controllers/CommentController.js';
 import { z } from 'zod';
 
@@ -71,6 +71,26 @@ export const actions = {
 		console.log(res);
 		return {
 			status: 200
+		};
+	},
+	delete: async ({ request, locals }: RequestEvent) => {
+		const authedUser = locals.authedUser;
+
+		const data = await request.formData();
+		const id = data.get('id')?.toString() || '';
+		let post = await getPostById(id);
+		post = JSON.parse(JSON.stringify(post));
+
+		if (!authedUser || !post || post.author._id !== authedUser._id) {
+			return {
+				status: 401
+			};
+		}
+
+		console.log(`deleting post ${id}`);
+		let res = await deletePost(id, authedUser._id);
+		return {
+			status: res
 		};
 	}
 };
