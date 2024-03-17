@@ -40,7 +40,7 @@
 						await update({ reset: false });
 					};
 				}}
-				action="/posts?/delete"
+				action={`/post/${post._id}?/delete`}
 				class="flex gap-4"
 			>
 				<input type="hidden" name="id" value={post._id} />

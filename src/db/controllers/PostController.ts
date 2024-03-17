@@ -67,6 +67,19 @@ export const getPosts = async () => {
 	return posts;
 };
 
+export const getPostsWithLimit = async (limit: number, page: number) => {
+	let posts = await PostModel.find({})
+		.populate('author', { username: 1, _id: 1 })
+		.skip((page - 1) * limit)
+		.limit(limit);
+	return posts;
+};
+
+export const getPostCount = async () => {
+	let count = await PostModel.countDocuments();
+	return count;
+};
+
 export const addCommentToPost = async (postId: string, commentId: string) => {
 	try {
 		await PostModel.findByIdAndUpdate(postId, { $push: { comments: commentId } });
